@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #F8F9FA;
+  --foreground: #111827;
+  --card: #FFFFFF;
+  --card-border: #E5E7EB;
+  --forest-primary: #164E3D;
+  --forest-hover: #113E30;
+  --forest-light: #F2F9F5;
+  --slate-subtle: #475569;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Crisp enterprise scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Enterprise Card Surfaces & Panels */
+.card-clean {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.15s ease-in-out;
+}
+
+.card-clean:hover {
+  border-color: #D1D5DB;
+  box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+}
+
+.card-interactive {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  border-color: #164E3D;
+  box-shadow: 0 3px 6px -1px rgba(22, 78, 61, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+}
+
+/* Architectural Site Plan Styles */
+.site-plan-canvas {
+  background-color: #F8F9FA;
+  background-image: 
+    linear-gradient(to right, #EEF0F2 1px, transparent 1px),
+    linear-gradient(to bottom, #EEF0F2 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Print Optimization for Reports */
+@media print {
+  body {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+  }
+  header, nav, aside, footer, button {
+    display: none !important;
+  }
+  .card-clean {
+    border: 1px solid #999999 !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+}
