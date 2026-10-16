@@ -1,0 +1,546 @@
+{
+  "version": "2.0.0",
+  "updated_at": 1792146231.5716488,
+  "items": [
+    {
+      "item_id": "item_ba3e60d9",
+      "name": "plastic waste",
+      "category": "plastic_waste",
+      "created_at": 1792134201.3798273,
+      "samples": [
+        {
+          "sample_id": "4a201f19a487",
+          "crop_filename": "crop_4a201f19a487.jpg",
+          "box": [
+            194,
+            90,
+            419,
+            360
+          ],
+          "created_at": 1792134201.3798273,
+          "keypoints_count": 1000
+        },
+        {
+          "sample_id": "65cea1af2022",
+          "crop_filename": "crop_65cea1af2022.jpg",
+          "box": [
+            49,
+            114,
+            401,
+            287
+          ],
+          "created_at": 1792134306.790169,
+          "keypoints_count": 933
+        },
+        {
+          "sample_id": "916cc7df7e07",
+          "crop_filename": "crop_916cc7df7e07.jpg",
+          "box": [
+            280,
+            125,
+            189,
+            163
+          ],
+          "created_at": 1792135600.6654053,
+          "keypoints_count": 179
+        },
+        {
+          "sample_id": "3d8da0c6cb65",
+          "crop_filename": "crop_3d8da0c6cb65.jpg",
+          "box": [
+            289,
+            147,
+            130,
+            189
+          ],
+          "created_at": 1792135620.5511558,
+          "keypoints_count": 255
+        },
+        {
+          "sample_id": "fd16e337149b",
+          "crop_filename": "crop_fd16e337149b.jpg",
+          "box": [
+            301,
+            100,
+            179,
+            195
+          ],
+          "created_at": 1792135685.5153291,
+          "keypoints_count": 83
+        },
+        {
+          "sample_id": "5cf2f99498e8",
+          "crop_filename": "crop_5cf2f99498e8.jpg",
+          "box": [
+            349,
+            158,
+            233,
+            146
+          ],
+          "created_at": 1792135701.9736986,
+          "keypoints_count": 136
+        },
+        {
+          "sample_id": "0e21afcac828",
+          "crop_filename": "crop_0e21afcac828.jpg",
+          "box": [
+            336,
+            133,
+            302,
+            335
+          ],
+          "created_at": 1792135720.5731266,
+          "keypoints_count": 242
+        },
+        {
+          "sample_id": "2f7970b52c54",
+          "crop_filename": "crop_2f7970b52c54.jpg",
+          "box": [
+            311,
+            102,
+            217,
+            210
+          ],
+          "created_at": 1792135742.2133305,
+          "keypoints_count": 231
+        },
+        {
+          "sample_id": "c602249d8b8a",
+          "crop_filename": "crop_c602249d8b8a.jpg",
+          "box": [
+            341,
+            173,
+            243,
+            161
+          ],
+          "created_at": 1792135815.429497,
+          "keypoints_count": 267
+        },
+        {
+          "sample_id": "a9f076c43cd5",
+          "crop_filename": "crop_a9f076c43cd5.jpg",
+          "box": [
+            358,
+            133,
+            211,
+            243
+          ],
+          "created_at": 1792135831.102609,
+          "keypoints_count": 194
+        },
+        {
+          "sample_id": "07f266cf054b",
+          "crop_filename": "crop_07f266cf054b.jpg",
+          "box": [
+            393,
+            144,
+            78,
+            252
+          ],
+          "created_at": 1792135855.4784753,
+          "keypoints_count": 151
+        },
+        {
+          "sample_id": "b22f75e73bfe",
+          "crop_filename": "crop_b22f75e73bfe.jpg",
+          "box": [
+            326,
+            127,
+            216,
+            227
+          ],
+          "created_at": 1792135870.5066724,
+          "keypoints_count": 238
+        },
+        {
+          "sample_id": "33e5884a81a8",
+          "crop_filename": "crop_33e5884a81a8.jpg",
+          "box": [
+            330,
+            144,
+            230,
+            130
+          ],
+          "created_at": 1792135888.714842,
+          "keypoints_count": 107
+        },
+        {
+          "sample_id": "f16a4c8f55aa",
+          "crop_filename": "crop_f16a4c8f55aa.jpg",
+          "box": [
+            331,
+            133,
+            295,
+            298
+          ],
+          "created_at": 1792136543.3251965,
+          "keypoints_count": 640
+        },
+        {
+          "sample_id": "3d87d01997fd",
+          "crop_filename": "crop_3d87d01997fd.jpg",
+          "box": [
+            344,
+            111,
+            233,
+            331
+          ],
+          "created_at": 1792136558.8395233,
+          "keypoints_count": 397
+        },
+        {
+          "sample_id": "8a2f7dcb6c02",
+          "crop_filename": "crop_8a2f7dcb6c02.jpg",
+          "box": [
+            265,
+            164,
+            326,
+            221
+          ],
+          "created_at": 1792136583.3555005,
+          "keypoints_count": 330
+        },
+        {
+          "sample_id": "6c2d6f3a2a17",
+          "crop_filename": "crop_6c2d6f3a2a17.jpg",
+          "box": [
+            365,
+            130,
+            188,
+            334
+          ],
+          "created_at": 1792136618.4239755,
+          "keypoints_count": 307
+        },
+        {
+          "sample_id": "caeecbb993ca",
+          "crop_filename": "crop_caeecbb993ca.jpg",
+          "box": [
+            304,
+            141,
+            196,
+            267
+          ],
+          "created_at": 1792136628.9215467,
+          "keypoints_count": 360
+        }
+      ]
+    },
+    {
+      "item_id": "item_588d30d1",
+      "name": "plastic bottle",
+      "category": "plastic_waste",
+      "created_at": 1792135295.1716087,
+      "samples": [
+        {
+          "sample_id": "4d87344d328d",
+          "crop_filename": "crop_4d87344d328d.jpg",
+          "box": [
+            444,
+            90,
+            164,
+            389
+          ],
+          "created_at": 1792135295.1716087,
+          "keypoints_count": 478
+        },
+        {
+          "sample_id": "df991d989af2",
+          "crop_filename": "crop_df991d989af2.jpg",
+          "box": [
+            375,
+            123,
+            163,
+            356
+          ],
+          "created_at": 1792135349.897806,
+          "keypoints_count": 364
+        },
+        {
+          "sample_id": "615e251d2f5a",
+          "crop_filename": "crop_615e251d2f5a.jpg",
+          "box": [
+            305,
+            75,
+            172,
+            388
+          ],
+          "created_at": 1792136184.384089,
+          "keypoints_count": 460
+        },
+        {
+          "sample_id": "30f12b5f584f",
+          "crop_filename": "crop_30f12b5f584f.jpg",
+          "box": [
+            199,
+            133,
+            396,
+            173
+          ],
+          "created_at": 1792136199.2288554,
+          "keypoints_count": 517
+        },
+        {
+          "sample_id": "eb41d086f6a5",
+          "crop_filename": "crop_eb41d086f6a5.jpg",
+          "box": [
+            262,
+            121,
+            331,
+            358
+          ],
+          "created_at": 1792136212.1093981,
+          "keypoints_count": 670
+        },
+        {
+          "sample_id": "23042b857c71",
+          "crop_filename": "crop_23042b857c71.jpg",
+          "box": [
+            288,
+            229,
+            294,
+            182
+          ],
+          "created_at": 1792136226.0302815,
+          "keypoints_count": 139
+        },
+        {
+          "sample_id": "b55c8e7133d3",
+          "crop_filename": "crop_b55c8e7133d3.jpg",
+          "box": [
+            316,
+            91,
+            249,
+            324
+          ],
+          "created_at": 1792136460.2751672,
+          "keypoints_count": 477
+        },
+        {
+          "sample_id": "42f6471216b6",
+          "crop_filename": "crop_42f6471216b6.jpg",
+          "box": [
+            304,
+            159,
+            274,
+            289
+          ],
+          "created_at": 1792136488.5322258,
+          "keypoints_count": 244
+        },
+        {
+          "sample_id": "d91c04677269",
+          "crop_filename": "crop_d91c04677269.jpg",
+          "box": [
+            279,
+            120,
+            146,
+            319
+          ],
+          "created_at": 1792136501.4981706,
+          "keypoints_count": 367
+        }
+      ]
+    },
+    {
+      "item_id": "item_b46de4a8",
+      "name": "Rama Krishna",
+      "category": "plastic_waste",
+      "created_at": 1792135924.8488255,
+      "samples": [
+        {
+          "sample_id": "40d312e43ceb",
+          "crop_filename": "crop_40d312e43ceb.jpg",
+          "box": [
+            17,
+            285,
+            170,
+            164
+          ],
+          "created_at": 1792135924.8488255,
+          "keypoints_count": 71
+        }
+      ]
+    },
+    {
+      "item_id": "item_9ef41ab4",
+      "name": "Ear bud case",
+      "category": "plastic_waste",
+      "created_at": 1792135992.1519973,
+      "samples": [
+        {
+          "sample_id": "cde301615ac1",
+          "crop_filename": "crop_cde301615ac1.jpg",
+          "box": [
+            383,
+            159,
+            123,
+            117
+          ],
+          "created_at": 1792135992.1519973,
+          "keypoints_count": 38
+        },
+        {
+          "sample_id": "d6c870f2597a",
+          "crop_filename": "crop_d6c870f2597a.jpg",
+          "box": [
+            391,
+            183,
+            153,
+            122
+          ],
+          "created_at": 1792136861.4670753,
+          "keypoints_count": 38
+        },
+        {
+          "sample_id": "61f31930adea",
+          "crop_filename": "crop_61f31930adea.jpg",
+          "box": [
+            400,
+            204,
+            89,
+            104
+          ],
+          "created_at": 1792136875.054625,
+          "keypoints_count": 34
+        },
+        {
+          "sample_id": "10cdea400ec2",
+          "crop_filename": "crop_10cdea400ec2.jpg",
+          "box": [
+            343,
+            188,
+            58,
+            90
+          ],
+          "created_at": 1792136902.326308,
+          "keypoints_count": 23
+        }
+      ]
+    },
+    {
+      "item_id": "item_bb21bd78",
+      "name": "mobile",
+      "category": "plastic_waste",
+      "created_at": 1792136697.1292212,
+      "samples": [
+        {
+          "sample_id": "c529207481a1",
+          "crop_filename": "crop_c529207481a1.jpg",
+          "box": [
+            281,
+            175,
+            217,
+            261
+          ],
+          "created_at": 1792136697.1292212,
+          "keypoints_count": 92
+        },
+        {
+          "sample_id": "11a8f1317d89",
+          "crop_filename": "crop_11a8f1317d89.jpg",
+          "box": [
+            312,
+            144,
+            256,
+            314
+          ],
+          "created_at": 1792136713.285536,
+          "keypoints_count": 99
+        },
+        {
+          "sample_id": "871f2d6087f8",
+          "crop_filename": "crop_871f2d6087f8.jpg",
+          "box": [
+            299,
+            165,
+            148,
+            262
+          ],
+          "created_at": 1792136725.2393417,
+          "keypoints_count": 84
+        },
+        {
+          "sample_id": "72943926b36e",
+          "crop_filename": "crop_72943926b36e.jpg",
+          "box": [
+            338,
+            156,
+            168,
+            295
+          ],
+          "created_at": 1792136738.5385418,
+          "keypoints_count": 57
+        },
+        {
+          "sample_id": "6da888f175ac",
+          "crop_filename": "crop_6da888f175ac.jpg",
+          "box": [
+            285,
+            159,
+            174,
+            277
+          ],
+          "created_at": 1792136760.1841958,
+          "keypoints_count": 87
+        }
+      ]
+    },
+    {
+      "item_id": "item_695785e8",
+      "name": "biscuit",
+      "category": "plastic_waste",
+      "created_at": 1792137118.7156148,
+      "samples": [
+        {
+          "sample_id": "e3752428a2ec",
+          "crop_filename": "crop_e3752428a2ec.jpg",
+          "box": [
+            232,
+            214,
+            321,
+            99
+          ],
+          "created_at": 1792137118.7156148,
+          "keypoints_count": 160
+        },
+        {
+          "sample_id": "4d4486c64ef2",
+          "crop_filename": "crop_4d4486c64ef2.jpg",
+          "box": [
+            207,
+            193,
+            288,
+            106
+          ],
+          "created_at": 1792137130.9465573,
+          "keypoints_count": 183
+        },
+        {
+          "sample_id": "8db10dade273",
+          "crop_filename": "crop_8db10dade273.jpg",
+          "box": [
+            290,
+            174,
+            214,
+            219
+          ],
+          "created_at": 1792137141.8766239,
+          "keypoints_count": 204
+        },
+        {
+          "sample_id": "1ed5e7de03aa",
+          "crop_filename": "crop_1ed5e7de03aa.jpg",
+          "box": [
+            332,
+            164,
+            225,
+            188
+          ],
+          "created_at": 1792137154.9524171,
+          "keypoints_count": 143
+        }
+      ]
+    }
+  ]
+}

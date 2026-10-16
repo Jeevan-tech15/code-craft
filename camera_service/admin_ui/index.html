@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoTwin AI — Camera Admin Console (Standalone)</title>
+  <style>
+    :root {
+      --bg: #F8F9FA;
+      --card-bg: #FFFFFF;
+      --text-main: #111827;
+      --text-muted: #6B7280;
+      --forest: #164E3D;
+      --forest-light: #EBF5F0;
+      --forest-dark: #0E3529;
+      --border: #E5E7EB;
+      --amber: #B45309;
+      --amber-bg: #FEF3C7;
+      --rose: #BE123C;
+      --rose-bg: #FFE4E6;
+      --emerald: #047857;
+      --emerald-bg: #D1FAE5;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text-main); min-height: 100vh; padding: 24px; }
+    .container { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+    
+    /* Header */
+    header { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .logo-badge { background: var(--forest); color: #fff; width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px; }
+    .brand-title { font-size: 17px; font-weight: 700; color: var(--text-main); }
+    .brand-sub { font-size: 12px; color: var(--text-muted); }
+    .header-pills { display: flex; align-items: center; gap: 10px; }
+    .pill { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; font-mono: true; display: inline-flex; align-items: center; gap: 6px; }
+    .pill-demo { background: #EEF2F6; color: #334155; border: 1px solid #CBD5E1; }
+    .pill-success { background: var(--emerald-bg); color: var(--emerald); border: 1px solid #A7F3D0; }
+    .pill-warning { background: var(--amber-bg); color: var(--amber); border: 1px solid #FDE68A; }
+    .pill-danger { background: var(--rose-bg); color: var(--rose); border: 1px solid #FECDD3; }
+
+    /* Disclosure Banner */
+    .banner { background: #FFFFFF; border: 1px solid var(--border); border-left: 4px solid var(--forest); border-radius: 8px; padding: 14px 18px; font-size: 12px; color: #374151; display: flex; justify-content: space-between; align-items: center; }
+    .banner-text b { color: var(--text-main); }
+
+    /* 4 Camera Panels Grid */
+    .section-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+    .section-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+    .cameras-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    @media (max-width: 1024px) { .cameras-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .cameras-grid { grid-template-columns: 1fr; } }
+    
+    .cam-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s ease; cursor: pointer; }
+    .cam-card:hover { border-color: #94A3B8; }
+    .cam-card.selected { border: 2px solid var(--forest); box-shadow: 0 4px 12px rgba(22, 78, 61, 0.08); background: #FFFFFF; }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .cam-id-tag { font-size: 11px; font-weight: 700; font-family: monospace; padding: 2px 8px; border-radius: 4px; background: #F1F5F9; border: 1px solid #E2E8F0; }
+    .cam-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
+    .cam-building { font-size: 12px; font-weight: 600; color: var(--forest); margin-bottom: 4px; }
+    .cam-zone { font-size: 11px; color: var(--text-muted); line-height: 1.3; }
+    .card-meta { margin-top: 14px; padding-top: 10px; border-top: 1px solid #F1F5F9; font-size: 11px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; font-family: monospace; }
+    .card-btn { margin-top: 12px; width: 100%; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; transition: background 0.15s; }
+    .btn-select { background: #F1F5F9; color: var(--text-main); }
+    .btn-select:hover { background: #E2E8F0; }
+    .cam-card.selected .btn-select { background: var(--forest); color: #fff; }
+
+    /* Main Console Grid (Live Video Feed + Detection Ledger) */
+    .console-grid { display: grid; grid-template-columns: 7fr 5fr; gap: 20px; }
+    @media (max-width: 1024px) { .console-grid { grid-template-columns: 1fr; } }
+    
+    .panel-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid #F1F5F9; }
+    .panel-title { font-size: 14px; font-weight: 700; }
+    
+    /* Live Feed Container */
+    .video-viewport { position: relative; width: 100%; aspect-ratio: 4/3; max-height: 440px; background: #0F172A; border-radius: 8px; overflow: hidden; margin-top: 14px; border: 1px solid #334155; display: flex; align-items: center; justify-content: center; }
+    .video-feed { width: 100%; height: 100%; object-fit: contain; }
+    .video-watermark { position: absolute; top: 10px; left: 10px; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); padding: 5px 10px; border-radius: 5px; font-size: 11px; font-family: monospace; color: #34D399; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px; }
+    .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: #10B981; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+    .standby-box { text-align: center; color: #94A3B8; padding: 30px; }
+    .standby-box h3 { color: #E2E8F0; font-size: 15px; margin-bottom: 6px; }
+
+    /* Controls Strip */
+    .controls-strip { margin-top: 14px; padding-top: 12px; border-top: 1px solid #F1F5F9; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; font-size: 12px; }
+    .action-btn { padding: 8px 14px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-primary { background: var(--forest); color: #fff; }
+    .btn-primary:hover { background: var(--forest-dark); }
+    .btn-stop { background: var(--amber); color: #fff; }
+    .btn-stop:hover { background: #92400E; }
+    .btn-secondary { background: #F1F5F9; color: #334155; border-color: #E2E8F0; }
+    .btn-secondary:hover { background: #E2E8F0; }
+
+    /* Verifier Pill Buttons */
+    .verifier-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .chip-btn { font-size: 11px; font-family: monospace; padding: 3px 8px; border-radius: 4px; background: #F8FAFC; border: 1px solid #E2E8F0; color: #475569; cursor: pointer; transition: all 0.15s; }
+    .chip-btn:hover { background: var(--forest-light); color: var(--forest); border-color: var(--forest); }
+
+    /* Events Ledger */
+    .events-scroll { margin-top: 14px; max-height: 480px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 4px; }
+    .event-card { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 6px; transition: border-color 0.15s; }
+    .event-card:hover { border-color: #CBD5E1; background: #FFFFFF; }
+    .evt-header { display: flex; justify-content: space-between; align-items: center; }
+    .evt-class { font-size: 12px; font-weight: 700; color: #1E293B; font-family: monospace; }
+    .evt-conf { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; background: var(--forest-light); color: var(--forest); border: 1px solid #A7F3D0; font-family: monospace; }
+    .evt-sub { font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; font-family: monospace; }
+    .evt-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #F1F5F9; padding-top: 6px; font-size: 11px; }
+    .empty-state { text-align: center; padding: 40px 16px; color: var(--text-muted); font-size: 12px; border: 1px dashed #E2E8F0; border-radius: 8px; }
+
+    /* Evidence Modal */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(2px); }
+    .modal-box { background: #fff; width: 500px; max-width: 90%; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .modal-head { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 700; }
+    .modal-body { padding: 14px; background: #0F172A; display: flex; justify-content: center; }
+    .modal-body img { max-width: 100%; max-height: 340px; border-radius: 6px; object-fit: contain; }
+    .modal-foot { padding: 12px 18px; background: #F8FAFC; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+    .close-btn { cursor: pointer; border: none; background: transparent; font-size: 18px; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Application 1 Header -->
+    <header>
+      <div class="brand">
+        <div class="logo-badge">CAM</div>
+        <div>
+          <div class="brand-title">EcoTwin AI — Edge Vision Admin Console</div>
+          <div class="brand-sub">Standalone Camera Monitoring Application (Application 1 — Port 8000)</div>
+        </div>
+      </div>
+      <div class="header-pills">
+        <span class="pill pill-demo">● Shared Laptop Webcam Demo</span>
+        <span id="hardware-pill" class="pill pill-warning">Probing Hardware...</span>
+        <span id="model-pill" class="pill pill-warning">MODEL NOT TRAINED</span>
+      </div>
+    </header>
+
+    <!-- Disclosure & Session Banner -->
+    <div class="banner">
+      <div class="banner-text">
+        <b>Independent Camera Management</b>: One physical webcam on this laptop captures frames and maps AI detections across four logical campus buildings. Only the selected camera actively captures.
+      </div>
+      <div style="font-family: monospace; font-size: 11px; color: var(--forest); font-weight: 700;">
+        Active Session: <span id="session-tag">syncing...</span>
+      </div>
+    </div>
+
+    <!-- The 4 Distinct Logical Camera Panels -->
+    <div>
+      <div class="section-title">Four Logical Campus Camera Panels</div>
+      <div class="section-desc">Select any camera panel to activate physical webcam routing and attribute validated AI detections to that campus facility.</div>
+      
+      <div class="cameras-grid">
+        <!-- Camera 1 -->
+        <div class="cam-card selected" id="panel-camera-1" onclick="selectCamera('camera-1')">
+          <div>
+            <div class="card-top">
+              <span class="cam-id-tag">Camera 1</span>
+              <span class="pill pill-success" id="badge-camera-1">READY</span>
+            </div>
+            <div class="cam-title">Engineering Block</div>
+            <div class="cam-building">Building ID: engineering</div>
+            <div class="cam-zone">North Rooftop & Prototyping Lab</div>
+          </div>
+          <div>
+            <div class="card-meta">
+              <div>Hardware: Laptop Webcam (Idx 0)</div>
+              <div>Last Frame: <span id="last-frame-camera-1">None yet</span></div>
+            </div>
+            <button class="card-btn btn-select" id="btn-camera-1">Active Camera</button>
+          </div>
+        </div>
+
+        <!-- Camera 2 -->
+        <div class="cam-card" id="panel-camera-2" onclick="selectCamera('camera-2')">
+          <div>
+            <div class="card-top">
+              <span class="cam-id-tag">Camera 2</span>
+              <span class="pill pill-demo" id="badge-camera-2">INACTIVE IN DEMO MODE</span>
+            </div>
+            <div class="cam-title">Central Library</div>
+            <div class="cam-building">Building ID: library</div>
+            <div class="cam-zone">Basement Hydronic Loop & Restrooms</div>
+          </div>
+          <div>
+            <div class="card-meta">
+              <div>Hardware: Laptop Webcam (Idx 0)</div>
+              <div>Last Frame: <span id="last-frame-camera-2">None yet</span></div>
+            </div>
+            <button class="card-btn btn-select" id="btn-camera-2">Select Camera</button>
+          </div>
+        </div>
+
+        <!-- Camera 3 -->
+        <div class="cam-card" id="panel-camera-3" onclick="selectCamera('camera-3')">
+          <div>
+            <div class="card-top">
+              <span class="cam-id-tag">Camera 3</span>
+              <span class="pill pill-demo" id="badge-camera-3">INACTIVE IN DEMO MODE</span>
+            </div>
+            <div class="cam-title">Science Laboratory</div>
+            <div class="cam-building">Building ID: laboratory</div>
+            <div class="cam-zone">West Wet Lab & Cleanroom Sector</div>
+          </div>
+          <div>
+            <div class="card-meta">
+              <div>Hardware: Laptop Webcam (Idx 0)</div>
+              <div>Last Frame: <span id="last-frame-camera-3">None yet</span></div>
+            </div>
+            <button class="card-btn btn-select" id="btn-camera-3">Select Camera</button>
+          </div>
+        </div>
+
+        <!-- Camera 4 -->
+        <div class="cam-card" id="panel-camera-4" onclick="selectCamera('camera-4')">
+          <div>
+            <div class="card-top">
+              <span class="cam-id-tag">Camera 4</span>
+              <span class="pill pill-demo" id="badge-camera-4">INACTIVE IN DEMO MODE</span>
+            </div>
+            <div class="cam-title">Dining Commons</div>
+            <div class="cam-building">Building ID: cafeteria</div>
+            <div class="cam-zone">South Kitchen & Bio-Digester Hub</div>
+          </div>
+          <div>
+            <div class="card-meta">
+              <div>Hardware: Laptop Webcam (Idx 0)</div>
+              <div>Last Frame: <span id="last-frame-camera-4">None yet</span></div>
+            </div>
+            <button class="card-btn btn-select" id="btn-camera-4">Select Camera</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Live Feed & Event Attribution Console -->
+    <div class="console-grid">
+      <!-- Left: Live Inference Viewport -->
+      <div class="panel-box">
+        <div>
+          <div class="panel-header">
+            <div>
+              <div class="panel-title" id="active-feed-title">Live Feed — Camera 1 (Engineering Block)</div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                DirectShow physical capture with real-time model inference
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="action-btn" id="teach-mode-btn" onclick="openTeachingModal()" style="background: #2563EB; color: #fff; font-weight: 600;">Freeze & Teach Waste</button>
+              <button class="action-btn btn-primary" id="toggle-monitoring-btn" onclick="toggleMonitoring()">Start Monitoring</button>
+            </div>
+          </div>
+
+          <!-- Video Viewport -->
+          <div class="video-viewport">
+            <div id="standby-screen" class="standby-box">
+              <h3>Webcam Feed Standby</h3>
+              <p style="font-size: 12px;">Capture paused. Click <b>"Start Monitoring"</b> to activate the physical webcam.</p>
+            </div>
+            <img id="live-stream-img" class="video-feed" style="display: none;" src="" alt="Live feed">
+            <div class="video-watermark">
+              <span class="pulse-dot"></span>
+              <span id="watermark-label">DEMO MODE | CAMERA 1 — ENGINEERING BLOCK</span>
+            </div>
+          </div>
+
+          <!-- Real Model Diagnostics & Attribution Banner -->
+          <div id="model-diag-banner" style="margin-top: 10px; padding: 10px 14px; background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 6px; font-size: 11px; color: #92400E; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <b>Shared Inference Model</b>: <span id="diag-model-status" style="font-weight: 700;">MODEL NOT TRAINED</span>
+              <span style="display: block; color: #78350F; margin-top: 2px;" id="diag-model-detail">No custom weights loaded. Webcam stream is live preview only; zero fake detections will be generated.</span>
+            </div>
+            <div style="text-align: right; font-family: monospace; font-size: 10px;">
+              <div>Architecture: 1 Shared Model</div>
+              <div style="color: var(--forest); font-weight: 700;">Active: <span id="diag-model-active-cam">Camera 1</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hardware & Validation Strip -->
+        <div class="controls-strip">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-weight: 600; color: #374151;">Webcam Device:</span>
+            <input type="number" id="device-index" value="0" min="0" max="4" style="width: 45px; padding: 4px; font-family: monospace; border: 1px solid var(--border); border-radius: 4px;">
+            <button class="action-btn btn-secondary" onclick="testHardware()">Probe Hardware</button>
+            <span id="probe-result" style="font-size: 11px; font-family: monospace; color: var(--forest); font-weight: 600;"></span>
+          </div>
+
+          <!-- Pre-Demo Validation Ticker -->
+          <div class="verifier-bar">
+            <span style="font-weight: 600; color: #374151;">Verify Event Persistence:</span>
+            <button class="chip-btn" onclick="recordTestDetection('plastic_waste')">+ plastic bottle</button>
+            <button class="chip-btn" onclick="recordTestDetection('paper_waste')">+ paper waste</button>
+            <button class="chip-btn" onclick="recordTestDetection('food_waste')">+ food waste</button>
+            <button class="chip-btn" onclick="recordTestDetection('overflowing_bins')">+ overflowing bin</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Attributed Detections Ledger (Strictly Isolated by Selected Camera) -->
+      <div class="panel-box">
+        <div>
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Attributed Events Ledger</div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                Filtered to: <b id="ledger-filter-name" style="color: var(--forest);">Camera 1 (Engineering Block)</b>
+              </div>
+            </div>
+            <button class="action-btn btn-secondary" onclick="fetchEvents(activeCameraId)" style="padding: 4px 8px; font-size: 11px;">Refresh</button>
+          </div>
+
+          <div class="events-scroll" id="events-container">
+            <div class="empty-state">
+              <p>No detection events recorded yet for this camera profile.</p>
+              <p style="margin-top: 4px; font-size: 11px;">Activate monitoring or use the validation tools above to verify attribution.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid #F1F5F9; display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+          <span>Backend: Supabase & Resilient Ledger</span>
+          <span style="font-weight: 600; color: var(--forest);">Cooldown: 20s Per Class</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Taught Waste Visual Memory Gallery -->
+    <div class="panel-box" style="margin-top: 20px;">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title" style="display: flex; align-items: center; gap: 8px;">
+            <span>Taught Waste Visual Memory Gallery</span>
+            <span id="gallery-count-badge" class="pill pill-success" style="font-size: 10px;">0 Items Remembered</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+            Few-Shot SIFT Feature Descriptors & Homography Projection • Shared across all 4 logical campus cameras
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="action-btn btn-primary" onclick="openTeachingModal()" style="font-size: 11px; padding: 6px 12px; background: #2563EB;">+ Freeze & Teach Item</button>
+          <button class="action-btn btn-secondary" onclick="fetchTaughtItems()" style="font-size: 11px; padding: 6px 10px;">Refresh Gallery</button>
+        </div>
+      </div>
+
+      <div id="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 14px;">
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <p>No waste items taught yet.</p>
+          <p style="margin-top: 4px; font-size: 11px;">Click <b>"Freeze & Teach Waste"</b> above to capture, draw a bounding box, and remember your first waste object.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evidence Snapshot Modal -->
+  <div class="modal-backdrop" id="evidence-modal" onclick="closeEvidenceModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-head">
+        <span id="modal-title">Evidence Capture Snapshot</span>
+        <button class="close-btn" onclick="closeEvidenceModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img id="modal-img" src="" alt="Evidence">
+      </div>
+      <div class="modal-foot">
+        <div><b id="modal-class">Class:</b> • <span id="modal-conf">Conf:</span></div>
+        <button class="action-btn btn-primary" onclick="closeEvidenceModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Teaching & Bounding Box Modal -->
+  <div class="modal-backdrop" id="teach-modal">
+    <div class="modal-box" style="width: 860px; max-width: 95%;" onclick="event.stopPropagation()">
+      <div class="modal-head">
+        <div>
+          <span id="teach-modal-title" style="font-weight: 700;">Live Teaching Mode — Freeze & Remember Waste Item</span>
+          <span id="teach-modal-sub" style="font-size: 11px; color: var(--text-muted); font-weight: normal; margin-left: 8px;">Draw bounding box around item</span>
+        </div>
+        <button class="close-btn" onclick="closeTeachingModal()">&times;</button>
+      </div>
+      <div style="padding: 16px; background: #F8FAFC; display: grid; grid-template-columns: 520px 1fr; gap: 16px;">
+        <!-- Left: Interactive Canvas -->
+        <div>
+          <div style="position: relative; width: 520px; height: 390px; background: #0F172A; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); user-select: none;">
+            <canvas id="teach-canvas" width="640" height="480" style="width: 100%; height: 100%; cursor: crosshair; display: block;"></canvas>
+            <div id="canvas-loading" style="position: absolute; inset: 0; background: rgba(15,23,42,0.85); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px;">
+              Freezing clean webcam frame...
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 11px; color: var(--text-muted);">
+            <span>Drag mouse to draw a tight box around the waste item</span>
+            <button class="chip-btn" onclick="recaptureTeachFrame()">Re-capture Frame</button>
+          </div>
+          <div style="margin-top: 10px; padding: 8px 12px; background: #EEF2F6; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 11px; color: #334155; line-height: 1.4;">
+            <b>Visual Instance Matching (SIFT)</b>: Recognizes this physical object across rotation, tilt, and lighting changes. For best results, capture 2–3 views (e.g. front, 45° angle, side). Note: instance matching cannot guarantee every angle or recognize unseen objects of a category without teaching them.
+          </div>
+        </div>
+
+        <!-- Right: Labels, Category, and Real-time Crop Preview -->
+        <div style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Crop Preview -->
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #374151; display: block; margin-bottom: 4px;">Cropped Reference View:</label>
+              <div style="width: 100%; height: 110px; background: #E2E8F0; border-radius: 6px; border: 1px dashed #CBD5E1; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <canvas id="crop-preview-canvas" width="120" height="110" style="max-height: 100%; max-width: 100%; object-fit: contain; display: none;"></canvas>
+                <span id="no-crop-text" style="font-size: 11px; color: #94A3B8;">No bounding box drawn yet</span>
+              </div>
+              <span id="crop-dimensions" style="font-size: 10px; color: var(--text-muted); font-family: monospace; margin-top: 2px; display: block;"></span>
+            </div>
+
+            <!-- Item Name Input or Selection -->
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #374151; display: block; margin-bottom: 4px;">Item Name / Label:</label>
+              <input id="teach-item-name" type="text" placeholder="e.g. plastic_water_bottle, paper_cup" style="width: 100%; padding: 7px 10px; font-size: 12px; border: 1px solid var(--border); border-radius: 6px; font-family: monospace;">
+              <div style="margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 10px; color: var(--text-muted);">Or add view to:</span>
+                <select id="existing-names-select" onchange="onSelectExistingName(this.value)" style="font-size: 11px; padding: 2px 6px; border: 1px solid var(--border); border-radius: 4px; font-family: monospace;">
+                  <option value="">-- Choose Existing Item --</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Environmental Category -->
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #374151; display: block; margin-bottom: 4px;">Environmental Category:</label>
+              <select id="teach-category" style="width: 100%; padding: 7px 10px; font-size: 12px; border: 1px solid var(--border); border-radius: 6px; font-family: monospace;">
+                <option value="plastic_waste">plastic_waste (Bottles, wrappers, cups)</option>
+                <option value="paper_waste">paper_waste (Paper, cardboard, napkins)</option>
+                <option value="food_waste">food_waste (Food scraps, peels, containers)</option>
+                <option value="overflowing_bins">overflowing_bins (Full / spilling bins)</option>
+                <option value="visible_litter">visible_litter (Scattered litter)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+            <button class="action-btn btn-primary" onclick="submitTeachItem()" id="submit-teach-btn" style="width: 100%; justify-content: center; background: #2563EB; font-weight: 700; padding: 10px;">Teach This Waste</button>
+            <button class="action-btn btn-secondary" onclick="closeTeachingModal()" style="width: 100%; justify-content: center;">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let activeCameraId = 'camera-1';
+    let isMonitoring = false;
+    let cameraMeta = {
+      'camera-1': { name: 'Camera 1 — Engineering Block', building: 'Engineering Block', buildingId: 'engineering' },
+      'camera-2': { name: 'Camera 2 — Central Library', building: 'Central Library', buildingId: 'library' },
+      'camera-3': { name: 'Camera 3 — Advanced Science Laboratory', building: 'Science Laboratory', buildingId: 'laboratory' },
+      'camera-4': { name: 'Camera 4 — Campus Dining Commons', building: 'Dining Commons', buildingId: 'cafeteria' },
+    };
+
+    async function fetchStatus() {
+      try {
+        const res = await fetch('/status');
+        const data = await res.json();
+        
+        // Update Session Tag
+        document.getElementById('session-tag').innerText = data.session_id ? data.session_id.substring(0, 8) : 'syncing';
+        
+        // Update Hardware Pill
+        const hwPill = document.getElementById('hardware-pill');
+        if (data.webcam_status === 'CONNECTED') {
+          hwPill.className = 'pill pill-success';
+          hwPill.innerText = `Index ${data.physical_device_index} CONNECTED`;
+        } else if (data.webcam_status === 'NOT CONFIGURED') {
+          hwPill.className = 'pill pill-warning';
+          hwPill.innerText = 'Index 0 NOT CONFIGURED';
+        } else {
+          hwPill.className = 'pill pill-danger';
+          hwPill.innerText = 'Webcam OFFLINE';
+        }
+
+        // Update Model Pill & Diagnostic Banner
+        const modelPill = document.getElementById('model-pill');
+        const diagStatus = document.getElementById('diag-model-status');
+        const diagDetail = document.getElementById('diag-model-detail');
+        const diagActiveCam = document.getElementById('diag-model-active-cam');
+        const diagBanner = document.getElementById('model-diag-banner');
+
+        if (diagActiveCam && cameraMeta[activeCameraId]) {
+          diagActiveCam.innerText = cameraMeta[activeCameraId].name.split('—')[0].trim();
+        }
+
+        if (data.model_status.is_available) {
+          modelPill.className = 'pill pill-success';
+          modelPill.innerText = 'MODEL ACTIVE (YOLO)';
+          if (diagStatus) diagStatus.innerText = 'MODEL ACTIVE (' + (data.model_status.model_name || 'YOLO') + ')';
+          if (diagDetail) diagDetail.innerText = 'Real-time object detection active. Attributed strictly to the active camera session.';
+          if (diagBanner) {
+            diagBanner.style.background = '#F0FDF4';
+            diagBanner.style.borderColor = '#BBF7D0';
+            diagBanner.style.color = '#166534';
+          }
+        } else {
+          modelPill.className = 'pill pill-warning';
+          modelPill.innerText = data.model_status.status || 'MODEL NOT TRAINED';
+          if (diagStatus) diagStatus.innerText = data.model_status.status || 'MODEL NOT TRAINED';
+          if (diagDetail) diagDetail.innerText = data.model_status.error_reason || 'No weights loaded. Stream is live preview only; zero fake detections will be generated.';
+          if (diagBanner) {
+            diagBanner.style.background = '#FFFBEB';
+            diagBanner.style.borderColor = '#FDE68A';
+            diagBanner.style.color = '#92400E';
+          }
+        }
+
+        // Update Monitoring State
+        isMonitoring = data.is_monitoring;
+        const toggleBtn = document.getElementById('toggle-monitoring-btn');
+        const standbyScreen = document.getElementById('standby-screen');
+        const streamImg = document.getElementById('live-stream-img');
+
+        if (isMonitoring && data.active_camera_id === activeCameraId) {
+          toggleBtn.className = 'action-btn btn-stop';
+          toggleBtn.innerText = 'Stop Monitoring';
+          standbyScreen.style.display = 'none';
+          streamImg.style.display = 'block';
+          if (!streamImg.src.includes('/stream')) {
+            streamImg.src = '/stream?t=' + Date.now();
+          }
+        } else {
+          toggleBtn.className = 'action-btn btn-primary';
+          toggleBtn.innerText = 'Start Monitoring';
+          standbyScreen.style.display = 'block';
+          streamImg.style.display = 'none';
+          streamImg.src = '';
+        }
+
+        // Update Camera Cards
+        ['camera-1', 'camera-2', 'camera-3', 'camera-4'].forEach(cid => {
+          const card = document.getElementById('panel-' + cid);
+          const badge = document.getElementById('badge-' + cid);
+          const btn = document.getElementById('btn-' + cid);
+          const lastFrame = document.getElementById('last-frame-' + cid);
+          const info = data.cameras[cid];
+
+          if (cid === activeCameraId) {
+            card.className = 'cam-card selected';
+            btn.innerText = 'Active Camera';
+            btn.className = 'card-btn btn-select';
+            badge.className = isMonitoring ? 'pill pill-success' : 'pill pill-warning';
+            badge.innerText = isMonitoring ? 'CONNECTED' : 'READY';
+          } else {
+            card.className = 'cam-card';
+            btn.innerText = 'Select Camera';
+            btn.className = 'card-btn btn-select';
+            badge.className = 'pill pill-demo';
+            badge.innerText = 'INACTIVE IN DEMO MODE';
+          }
+
+          if (info && info.last_frame_time) {
+            lastFrame.innerText = new Date(info.last_frame_time * 1000).toLocaleTimeString();
+          }
+        });
+
+      } catch (err) {
+        console.warn('Status poll failed:', err);
+      }
+    }
+
+    async function selectCamera(cameraId) {
+      if (cameraId === activeCameraId) return;
+      try {
+        const res = await fetch('/select-camera', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ camera_id: cameraId })
+        });
+        const data = await res.json();
+        activeCameraId = cameraId;
+        
+        const meta = cameraMeta[cameraId];
+        document.getElementById('active-feed-title').innerText = `Live Feed — ${meta.name}`;
+        document.getElementById('watermark-label').innerText = `DEMO MODE | ${meta.name.toUpperCase()}`;
+        document.getElementById('ledger-filter-name').innerText = meta.name;
+        const diagActiveCam = document.getElementById('diag-model-active-cam');
+        if (diagActiveCam) diagActiveCam.innerText = meta.name.split('—')[0].trim();
+
+        await fetchStatus();
+        await fetchEvents(cameraId);
+      } catch (err) {
+        alert('Failed to switch camera: ' + err.message);
+      }
+    }
+
+    async function toggleMonitoring() {
+      try {
+        const endpoint = isMonitoring ? '/stop-monitoring' : '/start-monitoring';
+        const body = !isMonitoring ? JSON.stringify({ camera_id: activeCameraId }) : undefined;
+        await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body
+        });
+        await fetchStatus();
+      } catch (err) {
+        alert('Monitoring action failed: ' + err.message);
+      }
+    }
+
+    async function testHardware() {
+      const idx = parseInt(document.getElementById('device-index').value) || 0;
+      const resSpan = document.getElementById('probe-result');
+      resSpan.innerText = 'Probing...';
+      try {
+        const res = await fetch('/test-camera', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ device_index: idx })
+        });
+        const data = await res.json();
+        if (data.success) {
+          resSpan.innerText = `Device ${idx} OK (${data.resolution})`;
+        } else {
+          resSpan.innerText = `Device ${idx} Offline: ${data.error || 'Failed'}`;
+        }
+        await fetchStatus();
+      } catch (err) {
+        resSpan.innerText = 'Probe error';
+      }
+    }
+
+    async function fetchEvents(cameraId) {
+      try {
+        const res = await fetch(`/events?camera_id=${cameraId}`);
+        const data = await res.json();
+        const container = document.getElementById('events-container');
+
+        if (!data.events || data.events.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <p>No detection events recorded yet for ${cameraMeta[cameraId].name}.</p>
+              <p style="margin-top: 4px; font-size: 11px;">Activate monitoring or use the validation tools above to verify attribution.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = data.events.map(e => `
+          <div class="event-card">
+            <div class="evt-header">
+              <span class="evt-class">${e.detected_class.toUpperCase().replace('_', ' ')}</span>
+              <span class="evt-conf">${(e.confidence * 100).toFixed(1)}% conf</span>
+            </div>
+            <div class="evt-sub">
+              <span>Code: ${e.event_code}</span>
+              <span>${new Date(e.detected_at).toLocaleTimeString()}</span>
+            </div>
+            <div class="evt-footer">
+              <span style="color: #475569;">Building: <b>${e.building_name}</b></span>
+              ${e.evidence_image_url ? `<a href="javascript:void(0)" onclick="openEvidenceModal('${e.evidence_image_url}', '${e.detected_class}', ${e.confidence})" style="color: var(--forest); font-weight: 600; text-decoration: none;">View Snapshot &rarr;</a>` : '<span style="color:#94a3b8; font-style:italic;">No snapshot</span>'}
+            </div>
+          </div>
+        `).join('');
+
+      } catch (err) {
+        console.error('Failed to fetch events:', err);
+      }
+    }
+
+    async function recordTestDetection(detectedClass) {
+      try {
+        const confidence = parseFloat((0.85 + Math.random() * 0.1).toFixed(4));
+        const res = await fetch('/events/record-detection', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            camera_id: activeCameraId,
+            detected_class: detectedClass,
+            confidence
+          })
+        });
+        const data = await res.json();
+        await fetchEvents(activeCameraId);
+        await fetchStatus();
+      } catch (err) {
+        alert('Validation failed: ' + err.message);
+      }
+    }
+
+    function openEvidenceModal(url, cls, conf) {
+      document.getElementById('modal-img').src = url;
+      document.getElementById('modal-class').innerText = 'Class: ' + cls.replace('_', ' ').toUpperCase();
+      document.getElementById('modal-conf').innerText = 'Confidence: ' + (conf * 100).toFixed(1) + '%';
+      document.getElementById('evidence-modal').style.display = 'flex';
+    }
+
+    function closeEvidenceModal() {
+      document.getElementById('evidence-modal').style.display = 'none';
+      document.getElementById('modal-img').src = '';
+    }
+
+    // -------------------------------------------------------------
+    // Live Teaching Mode Canvas & Visual Memory Logic
+    // -------------------------------------------------------------
+    let frozenFrameImg = new Image();
+    let frozenRawDataUrl = '';
+    let isDrawing = false;
+    let startX = 0, startY = 0;
+    let currentBox = null;
+    let memoryItems = [];
+
+    async function openTeachingModal(prefilledName = '', prefilledCat = 'plastic_waste') {
+      const modal = document.getElementById('teach-modal');
+      modal.style.display = 'flex';
+      document.getElementById('canvas-loading').style.display = 'flex';
+      document.getElementById('no-crop-text').style.display = 'block';
+      document.getElementById('crop-preview-canvas').style.display = 'none';
+      document.getElementById('crop-dimensions').innerText = '';
+      currentBox = null;
+
+      if (prefilledName) {
+        document.getElementById('teach-modal-title').innerText = `Add Reference Angle: '${prefilledName}'`;
+        document.getElementById('teach-modal-sub').innerText = 'Rotate/tilt item ~30-45° or change distance, then draw box';
+        document.getElementById('teach-item-name').value = prefilledName;
+      } else {
+        document.getElementById('teach-modal-title').innerText = 'Live Teaching Mode — Freeze & Remember Waste Item';
+        document.getElementById('teach-modal-sub').innerText = 'Draw bounding box around item';
+        document.getElementById('teach-item-name').value = '';
+      }
+      if (prefilledCat) {
+        document.getElementById('teach-category').value = prefilledCat;
+      }
+
+      await updateExistingNamesSelect();
+      await captureFreezeFrame();
+      setupCanvasEvents();
+    }
+
+    function closeTeachingModal() {
+      document.getElementById('teach-modal').style.display = 'none';
+    }
+
+    async function captureFreezeFrame() {
+      const loading = document.getElementById('canvas-loading');
+      loading.style.display = 'flex';
+      loading.innerText = 'Freezing live webcam frame...';
+
+      try {
+        const res = await fetch('/freeze-frame');
+        const data = await res.json();
+        frozenRawDataUrl = data.image_data;
+
+        frozenFrameImg.onload = () => {
+          const canvas = document.getElementById('teach-canvas');
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(frozenFrameImg, 0, 0, canvas.width, canvas.height);
+          loading.style.display = 'none';
+        };
+        frozenFrameImg.src = frozenRawDataUrl;
+      } catch (err) {
+        loading.innerText = 'Failed to capture frame: ' + err.message;
+      }
+    }
+
+    function recaptureTeachFrame() {
+      currentBox = null;
+      document.getElementById('no-crop-text').style.display = 'block';
+      document.getElementById('crop-preview-canvas').style.display = 'none';
+      document.getElementById('crop-dimensions').innerText = '';
+      captureFreezeFrame();
+    }
+
+    let canvasEventsConfigured = false;
+    function setupCanvasEvents() {
+      if (canvasEventsConfigured) return;
+      canvasEventsConfigured = true;
+
+      const canvas = document.getElementById('teach-canvas');
+      const ctx = canvas.getContext('2d');
+
+      function getCanvasCoords(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        return {
+          x: (e.clientX - rect.left) * scaleX,
+          y: (e.clientY - rect.top) * scaleY
+        };
+      }
+
+      canvas.addEventListener('mousedown', (e) => {
+        isDrawing = true;
+        const pos = getCanvasCoords(e);
+        startX = pos.x;
+        startY = pos.y;
+        currentBox = null;
+      });
+
+      canvas.addEventListener('mousemove', (e) => {
+        if (!isDrawing) return;
+        const pos = getCanvasCoords(e);
+        const x = Math.min(startX, pos.x);
+        const y = Math.min(startY, pos.y);
+        const w = Math.abs(pos.x - startX);
+        const h = Math.abs(pos.y - startY);
+        currentBox = [x, y, w, h];
+
+        // Redraw image
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(frozenFrameImg, 0, 0, canvas.width, canvas.height);
+
+        // Draw selection box
+        ctx.strokeStyle = '#10B981';
+        ctx.lineWidth = 2;
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.2)';
+        ctx.fillRect(x, y, w, h);
+        ctx.strokeRect(x, y, w, h);
+
+        // Update real-time crop preview
+        if (w > 15 && h > 15) {
+          updateCropPreview(x, y, w, h);
+        }
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (isDrawing) {
+          isDrawing = false;
+          if (currentBox && currentBox[2] > 15 && currentBox[3] > 15) {
+            updateCropPreview(currentBox[0], currentBox[1], currentBox[2], currentBox[3]);
+          }
+        }
+      });
+    }
+
+    function updateCropPreview(x, y, w, h) {
+      const previewCanvas = document.getElementById('crop-preview-canvas');
+      const pctx = previewCanvas.getContext('2d');
+      previewCanvas.width = Math.max(w, 20);
+      previewCanvas.height = Math.max(h, 20);
+      pctx.drawImage(frozenFrameImg, x, y, w, h, 0, 0, previewCanvas.width, previewCanvas.height);
+      previewCanvas.style.display = 'block';
+      document.getElementById('no-crop-text').style.display = 'none';
+      document.getElementById('crop-dimensions').innerText = `Box: [${Math.round(x)}, ${Math.round(y)}, ${Math.round(w)}, ${Math.round(h)}] px`;
+    }
+
+    async function updateExistingNamesSelect() {
+      try {
+        const res = await fetch('/memory/items');
+        const data = await res.json();
+        memoryItems = data.items || [];
+        const select = document.getElementById('existing-names-select');
+        select.innerHTML = '<option value="">-- Choose Existing Item --</option>' +
+          memoryItems.map(it => `<option value="${it.name}">${it.name} (${it.views_count} views)</option>`).join('');
+      } catch (err) {
+        console.warn('Could not populate existing names:', err);
+      }
+    }
+
+    function onSelectExistingName(name) {
+      if (!name) return;
+      document.getElementById('teach-item-name').value = name;
+      const match = memoryItems.find(it => it.name === name);
+      if (match) {
+        document.getElementById('teach-category').value = match.category;
+      }
+    }
+
+    async function submitTeachItem() {
+      const name = document.getElementById('teach-item-name').value.trim();
+      const category = document.getElementById('teach-category').value;
+      const submitBtn = document.getElementById('submit-teach-btn');
+
+      if (!name) {
+        alert('Please enter a name for the waste item (e.g. plastic_water_bottle, paper_cup).');
+        return;
+      }
+
+      if (!currentBox || currentBox[2] < 15 || currentBox[3] < 15) {
+        alert('Please draw a bounding box around the waste item on the frozen frame.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Extracting Visual Features...';
+
+      try {
+        const res = await fetch('/memory/teach', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            category,
+            box: [Math.round(currentBox[0]), Math.round(currentBox[1]), Math.round(currentBox[2]), Math.round(currentBox[3])],
+            image_base64: frozenRawDataUrl
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Teaching failed');
+
+        alert(`Successfully remembered '${name}'!\n• SIFT Keypoints Extracted: ${data.keypoints_detected}\n• Total Reference Views: ${data.views_count}`);
+        closeTeachingModal();
+        await fetchTaughtItems();
+        await fetchStatus();
+      } catch (err) {
+        alert('Error saving taught item: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Teach This Waste';
+      }
+    }
+
+    async function fetchTaughtItems() {
+      try {
+        const res = await fetch('/memory/items');
+        const data = await res.json();
+        memoryItems = data.items || [];
+
+        document.getElementById('gallery-count-badge').innerText = `${data.total_items} Items (${data.total_views} Views)`;
+
+        const grid = document.getElementById('gallery-grid');
+        if (!memoryItems || memoryItems.length === 0) {
+          grid.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+              <p>No waste items taught yet.</p>
+              <p style="margin-top: 4px; font-size: 11px;">Click <b>"Freeze & Teach Waste"</b> above to capture, draw a bounding box, and remember your first waste object.</p>
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = memoryItems.map(item => {
+          return `
+            <div style="background: #FFFFFF; border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                  <div>
+                    <b style="font-size: 13px; color: var(--text-main); font-family: monospace;">${item.name}</b>
+                    <div style="font-size: 10px; color: var(--text-muted); font-family: monospace; margin-top: 2px;">
+                      Category: <span style="color: var(--forest); font-weight: 600;">${item.category}</span>
+                    </div>
+                  </div>
+                  <span class="pill pill-success" style="font-size: 10px;">${item.views_count} View${item.views_count > 1 ? 's' : ''}</span>
+                </div>
+
+                <!-- Thumbnail Carousel -->
+                <div style="display: flex; gap: 6px; overflow-x: auto; padding: 6px 0; margin-bottom: 10px;">
+                  ${item.samples.map(s => `
+                    <div style="position: relative; flex-shrink: 0; width: 64px; height: 64px; border-radius: 4px; overflow: hidden; border: 1px solid #CBD5E1; background: #0F172A;">
+                      <img src="${s.crop_url}" style="width: 100%; height: 100%; object-fit: cover;" title="${s.keypoints_count} keypoints">
+                      <button onclick="deleteSampleView('${item.item_id}', '${s.sample_id}')" title="Delete view" style="position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.7); color: #fff; border: none; border-radius: 3px; width: 14px; height: 14px; font-size: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center;">&times;</button>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 6px; border-top: 1px solid #F1F5F9; padding-top: 10px;">
+                <button class="chip-btn" onclick="openTeachingModal('${item.name}', '${item.category}')" style="flex: 1; text-align: center; color: #2563EB; border-color: #93C5FD;">+ Add View</button>
+                <button class="chip-btn" onclick="renameTaughtItem('${item.item_id}', '${item.name}')" style="flex: 1; text-align: center;">Rename</button>
+                <button class="chip-btn" onclick="deleteTaughtItem('${item.item_id}', '${item.name}')" style="flex: 1; text-align: center; color: var(--rose); border-color: #FECDD3;">Delete</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      } catch (err) {
+        console.error('Failed to fetch taught items:', err);
+      }
+    }
+
+    async function renameTaughtItem(itemId, currentName) {
+      const newName = prompt(`Enter new name for '${currentName}':`, currentName);
+      if (!newName || newName.trim() === '' || newName.trim() === currentName) return;
+
+      try {
+        const res = await fetch(`/memory/items/${itemId}/rename`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ new_name: newName.trim() })
+        });
+        if (!res.ok) throw new Error('Rename failed');
+        await fetchTaughtItems();
+        await fetchStatus();
+      } catch (err) {
+        alert('Failed to rename item: ' + err.message);
+      }
+    }
+
+    async function deleteTaughtItem(itemId, name) {
+      if (!confirm(`Are you sure you want to delete '${name}' and all its reference views?`)) return;
+
+      try {
+        const res = await fetch(`/memory/items/${itemId}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Delete failed');
+        await fetchTaughtItems();
+        await fetchStatus();
+      } catch (err) {
+        alert('Failed to delete item: ' + err.message);
+      }
+    }
+
+    async function deleteSampleView(itemId, sampleId) {
+      if (!confirm('Delete this reference view?')) return;
+
+      try {
+        const res = await fetch(`/memory/items/${itemId}/samples/${sampleId}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Delete view failed');
+        await fetchTaughtItems();
+        await fetchStatus();
+      } catch (err) {
+        alert('Failed to delete view: ' + err.message);
+      }
+    }
+
+    // Initialize
+    fetchStatus();
+    fetchEvents(activeCameraId);
+    fetchTaughtItems();
+    setInterval(fetchStatus, 3000);
+  </script>
+</body>
+</html>
