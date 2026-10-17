@@ -77,4 +77,4 @@ Open [http://localhost:8000](http://localhost:8000) for the live camera manageme
 ---
 
 ## 👥 Authors & Acknowledgments
-Built for the **Code Craft Hackathon** by **Jeevan Naik** ([@Jeevan-tech15](https://github.com/Jeevan-tech15)).
+Built for the **Hackathon** Code Craft team by **Jeevan Naik, Devendra P, L Chaitra** 
