@@ -1,0 +1,18 @@
+# EcoTwin AI — Environmental Waste Object Detection Dataset Config
+# YOLOv8 / YOLOv11 Format
+
+path: . # Dataset root directory relative to this yaml
+train: images/train
+val: images/val
+test: images/test
+
+# Number of classes
+nc: 5
+
+# Class names corresponding to index 0..4
+names:
+  0: plastic_waste
+  1: paper_waste
+  2: food_waste
+  3: overflowing_bins
+  4: visible_litter
